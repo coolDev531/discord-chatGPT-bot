@@ -8,6 +8,7 @@
     "dev": "nodemon ."
   },
   "dependencies": {
+    "aws-sdk": "^2.1287.0",
     "axios": "^1.2.2",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",

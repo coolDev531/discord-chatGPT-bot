@@ -1,10 +1,5 @@
 require('dotenv').config();
-const {
-  Client,
-  GatewayIntentBits,
-  Collection,
-  EmbedBuilder,
-} = require('discord.js');
+const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const { Configuration, OpenAIApi } = require('openai');
 const { handleError } = require('./utils/errorHandler');
 const aiimage = require('./commands/aiimage');
@@ -38,6 +33,8 @@ client.on('messageCreate', async (message) => {
     const prompt = message.content.slice(prefix.length).replace(args[0], '');
     const command = args.shift().toLowerCase();
 
+    console.log(`${Date.now()}: ${message.author.username}: ${prompt}`);
+
     if (
       command.toLowerCase() === 'chatai' ||
       command.toLowerCase() === 'chatgpt' ||
@@ -61,8 +58,11 @@ client.on('messageCreate', async (message) => {
       return await aiimagevariation(message, openai);
     }
   } catch (error) {
-    console.log(error.response.data.error.message);
-    return handleError(message, error.response.data.error.message);
+    console.log(error?.response?.data?.error?.message || error);
+    return handleError(
+      message,
+      error?.response?.data?.error?.message || JSON.stringify(error)
+    );
   }
 });
 

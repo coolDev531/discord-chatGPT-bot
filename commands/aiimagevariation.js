@@ -1,10 +1,13 @@
+require('dotenv').config();
 const axios = require('axios');
 const fs = require('fs');
 const sharp = require('sharp');
 const fsPromise = require('fs/promises');
 const buildEmbed = require('../utils/buildEmbed');
-const path = require('path');
 const { handleError } = require('../utils/errorHandler');
+const createS3 = require('../utils/createS3');
+
+const s3 = createS3();
 
 module.exports = async (message, openai) => {
   try {
@@ -19,43 +22,77 @@ module.exports = async (message, openai) => {
 
     const fileName = `${toBeConverted.id + Date.now()}`;
 
-    response.data.pipe(
-      fs.createWriteStream(path.resolve(__dirname, `../files/${fileName}.png`))
+    const key = `${fileName}.png`;
+
+    try {
+      // Upload file to the S3 bucket
+      await s3
+        .upload({
+          Body: response.data,
+          Bucket: process.env.S3_BUCKET_NAME,
+          Key: key,
+          ACL: 'public-read',
+          ContentType: 'image/png',
+        })
+        .promise();
+    } catch (err) {
+      console.log('Error occurred while trying to upload the file to S3', err);
+
+      return handleError(
+        message,
+        'Error occurred while trying to upload the file to S3'
+      );
+    }
+
+    let originalImage;
+
+    try {
+      originalImage = await s3
+        .getObject({
+          Bucket: process.env.S3_BUCKET_NAME,
+          Key: key,
+        })
+        .promise();
+    } catch (error) {
+      console.log('error getting image from S3', error);
+      return handleError(message, 'error getting image from S3');
+    }
+
+    const resizedImageBuffer = await sharp(
+      Buffer.from(originalImage.Body, 'utf-8')
+    )
+      .resize({
+        width: 1024,
+        height: 1024,
+      })
+      .toFormat('png');
+
+    // Delete the file from the S3 bucket
+    await s3
+      .deleteObject({
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: key,
+      })
+      .promise();
+
+    resizedImageBuffer.name = toBeConverted.name || 'image'; // set the name of the buffer to the name of the file
+
+    const imageResp = await openai.createImageVariation(
+      resizedImageBuffer,
+      1,
+      '1024x1024'
     );
 
-    return response.data.on('end', async () => {
-      const originalImage = path.resolve(__dirname, `../files/${fileName}.png`);
-      await sharp(originalImage)
-        .resize({
-          width: 1024,
-          height: 1024,
-        })
-        .toFile(path.resolve(__dirname, `../files/${fileName}-resized.png`));
+    const imageUrl = imageResp.data.data[0].url;
+    const embed = buildEmbed(imageUrl);
+    message.reply({ embeds: [embed] });
 
-      const buffer = await fsPromise.readFile(
-        path.resolve(__dirname, `../files/${fileName}-resized.png`)
-      );
-
-      buffer.name = toBeConverted.name || 'image'; // set the name of the buffer to the name of the file
-
-      const imageResp = await openai.createImageVariation(
-        buffer,
-        1,
-        '1024x1024'
-      );
-      const imageUrl = imageResp.data.data[0].url;
-      const embed = buildEmbed(imageUrl);
-      message.reply({ embeds: [embed] });
-      await fsPromise.unlink(
-        path.resolve(__dirname, `../files/${fileName}.png`)
-      ); // delete the file when done
-      await fsPromise.unlink(
-        path.resolve(__dirname, `../files/${fileName}-resized.png`)
-      ); // delete the file when done
-      return;
-    });
+    return;
   } catch (error) {
-    console.log(error.response.data.error.message);
-    return handleError(message, error.response.data.error.message);
+    console.log(error?.response?.data?.error?.message || error);
+    return handleError(
+      message,
+      error?.response?.data?.error?.message || JSON.stringify(error)
+    );
   }
 };
