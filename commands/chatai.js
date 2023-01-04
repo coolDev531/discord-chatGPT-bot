@@ -13,7 +13,10 @@ module.exports = async (message, openai, prompt) => {
 
     message.reply(completion.data.choices[0].text);
   } catch (error) {
-    console.log(error.response.data.error.message);
-    return handleError(message, error.response.data.error.message);
+    console.log(error?.response?.data?.error?.message);
+    return handleError(
+      message,
+      error?.response?.data?.error?.message || 'ERROR'
+    );
   }
 };
