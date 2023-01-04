@@ -3,6 +3,7 @@ const fs = require('fs');
 const sharp = require('sharp');
 const fsPromise = require('fs/promises');
 const buildEmbed = require('../utils/buildEmbed');
+const path = require('path');
 
 module.exports = async (message, openai) => {
   message.reply('one moment, crafting an image...');
@@ -17,14 +18,13 @@ module.exports = async (message, openai) => {
       const fileName = `${toBeConverted.id + Date.now()}`;
       response.data.pipe(fs.createWriteStream(`./files/${fileName}.png`));
       return response.data.on('end', async () => {
-        const originalImage = `./files/${fileName}.png`;
-
+        const originalImage = path.resolve(__dirname, `files/${fileName}.png`);
         await sharp(originalImage)
           .resize({
             width: 1024,
             height: 1024,
           })
-          .toFile(`./files/${fileName}-resized.png`);
+          .toFile(path.resolve(__dirname, `files/${fileName}-resized.png`));
 
         const buffer = await fsPromise.readFile(
           `./files/${fileName}-resized.png`
