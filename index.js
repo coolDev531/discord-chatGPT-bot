@@ -5,6 +5,7 @@ const { handleError } = require('./utils/errorHandler');
 const aiimage = require('./commands/aiimage');
 const aiimagevariation = require('./commands/aiimagevariation');
 const chatai = require('./commands/chatai');
+const aiimageedit = require('./commands/aiimageedit');
 
 const client = new Client({
   intents: [
@@ -25,6 +26,20 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
+const COMMAND_ALIASES = {
+  chatai: ['chatai', 'chat', 'chatgpt', 'chatbot'],
+  aiimage: ['aiimage', 'imageai', 'image', 'makeimage'],
+  aiimagevariation: [
+    'aiimagevariation',
+    'aiimagevar',
+    'imagevariation',
+    'imagevar',
+    'reviseimage',
+    'aireviseimage',
+  ],
+  aiimageedit: ['imageedit', 'editimage', 'aiimageedit', 'aieditimage'],
+};
+
 client.on('messageCreate', async (message) => {
   try {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -35,27 +50,20 @@ client.on('messageCreate', async (message) => {
 
     console.log(`${Date.now()}: ${message.author.username}: ${prompt}`);
 
-    if (
-      command.toLowerCase() === 'chatai' ||
-      command.toLowerCase() === 'chatgpt' ||
-      command.toLowerCase() === 'chatbot'
-    ) {
+    if (COMMAND_ALIASES['chatai'].includes(command)) {
       return await chatai(message, openai, prompt);
     }
 
-    if (
-      command.toLowerCase() === 'aiimage' ||
-      command.toLowerCase() === 'imageai'
-    ) {
+    if (COMMAND_ALIASES['aiimage'].includes(command)) {
       return await aiimage(message, openai, prompt);
     }
 
-    if (
-      command.toLowerCase() === 'aiimagevariation' ||
-      command.toLowerCase() === 'aiimagevar' ||
-      command.toLowerCase() === 'aireviseimage'
-    ) {
+    if (COMMAND_ALIASES['aiimagevariation'].includes(command)) {
       return await aiimagevariation(message, openai);
+    }
+
+    if (COMMAND_ALIASES['aiimageedit'].includes(command)) {
+      return await aiimageedit(message, openai, prompt);
     }
   } catch (error) {
     console.log(error?.response?.data?.error?.message || error);

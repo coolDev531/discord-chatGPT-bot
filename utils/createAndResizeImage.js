@@ -2,20 +2,17 @@ const axios = require('axios');
 const sharp = require('sharp');
 require('dotenv').config();
 
-module.exports = async (message, s3) => {
-  const toBeConverted = [...message.attachments.values()][0];
-
-  const response = await axios({
-    method: 'get',
-    url: toBeConverted.url,
-    responseType: 'stream',
-  });
-
+module.exports = async (message, s3, toBeConverted) => {
   const fileName = `${toBeConverted.id + Date.now()}`;
-
   const key = `${fileName}.png`;
 
   try {
+    const response = await axios({
+      method: 'get',
+      url: toBeConverted.url,
+      responseType: 'stream',
+    });
+
     // Upload file to the S3 bucket
     await s3
       .upload({

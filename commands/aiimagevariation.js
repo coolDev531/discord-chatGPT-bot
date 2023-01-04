@@ -8,9 +8,15 @@ const s3 = createS3();
 
 module.exports = async (message, openai) => {
   try {
+    const toBeConverted = [...message.attachments.values()][0];
+
     message.reply('one moment, crafting an image...');
 
-    const resizedImageBuffer = await createAndResizeImage(message, s3);
+    const resizedImageBuffer = await createAndResizeImage(
+      message,
+      s3,
+      toBeConverted
+    );
 
     const imageResp = await openai.createImageVariation(
       resizedImageBuffer,
