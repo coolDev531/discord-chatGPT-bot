@@ -130,4 +130,6 @@ function buildEmbed(url) {
   return new EmbedBuilder().setColor(0x0099ff).setURL(url).setImage(url);
 }
 
-client.login(process.env.DISCORD_TOKEN);
+client.login(process.env.DISCORD_TOKEN).then(() => {
+  console.log('ready');
+});
