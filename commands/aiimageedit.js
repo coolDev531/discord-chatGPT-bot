@@ -11,7 +11,7 @@ module.exports = async (message, openai, prompt) => {
     if ([...message.attachments.values()].length < 2) {
       return handleError(
         message,
-        'Please attach two images to your message., first image is the base image, second image is the mask'
+        'Please attach two images to your message., first image is the base image, second image is the mask (transparent png)'
       );
     }
 
