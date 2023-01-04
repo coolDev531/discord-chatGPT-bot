@@ -1,3 +1,5 @@
+const { handleError } = require('../utils/errorHandler');
+
 module.exports = async (message, openai, prompt) => {
   try {
     const completion = await openai.createCompletion({
