@@ -27,7 +27,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const COMMAND_ALIASES = {
-  chatai: ['chatai', 'chat', 'chatgpt', 'chatbot'],
+  chatai: ['chatai', 'chat', 'chatgpt', 'chatbot', 'aichat'],
   aiimage: ['aiimage', 'imageai', 'image', 'makeimage'],
   aiimagevariation: [
     'aiimagevariation',
