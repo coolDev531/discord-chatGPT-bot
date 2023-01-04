@@ -9,6 +9,7 @@ const { Configuration, OpenAIApi } = require('openai');
 const { handleError } = require('./utils/errorHandler');
 const aiimage = require('./commands/aiimage');
 const aiimagevariation = require('./commands/aiimagevariation');
+const chatai = require('./commands/chatai');
 
 const client = new Client({
   intents: [
@@ -35,7 +36,6 @@ client.on('messageCreate', async (message) => {
 
     const args = message.content.slice(prefix.length).split(/ +/);
     const prompt = message.content.slice(prefix.length).replace(args[0], '');
-    // console.log(prompt);
     const command = args.shift().toLowerCase();
 
     if (
@@ -43,24 +43,14 @@ client.on('messageCreate', async (message) => {
       command.toLowerCase() === 'chatgpt' ||
       command.toLowerCase() === 'chatbot'
     ) {
-      const completion = await openai.createCompletion({
-        model: 'text-davinci-003',
-        // prompt: args.join(' '),
-        prompt: prompt,
-        temperature: 1,
-        max_tokens: 2049,
-        // stop: ['ChatGPT:', `${message.author.username}:`],
-      });
-
-      message.reply(completion.data.choices[0].text);
-      return;
+      return chatai(message, openai, prompt);
     }
 
     if (
       command.toLowerCase() === 'aiimage' ||
       command.toLowerCase() === 'imageai'
     ) {
-      return aiimage(message, openai);
+      return aiimage(message, openai, prompt);
     }
 
     if (

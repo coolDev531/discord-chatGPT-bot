@@ -1,6 +1,6 @@
 const buildEmbed = require('../utils/buildEmbed');
 
-module.exports = async (message, openai) => {
+module.exports = async (message, openai, prompt) => {
   message.reply('one moment, crafting an image...');
 
   const imageResp = await openai.createImage({
