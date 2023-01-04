@@ -14,6 +14,7 @@ module.exports = async (message, openai, prompt) => {
     try {
       await message.reply(completion.data.choices[0].text);
     } catch (error) {
+      console.log({ error });
       console.log(error?.response?.data?.error?.message);
       return handleError(
         message,
