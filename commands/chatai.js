@@ -11,7 +11,15 @@ module.exports = async (message, openai, prompt) => {
       // stop: ['ChatGPT:', `${message.author.username}:`],
     });
 
-    message.reply(completion.data.choices[0].text);
+    try {
+      await message.reply(completion.data.choices[0].text);
+    } catch (error) {
+      console.log(error?.response?.data?.error?.message);
+      return handleError(
+        message,
+        error?.response?.data?.error?.message || 'ERROR'
+      );
+    }
   } catch (error) {
     console.log(error?.response?.data?.error?.message);
     return handleError(
