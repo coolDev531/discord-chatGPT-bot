@@ -43,14 +43,14 @@ client.on('messageCreate', async (message) => {
       command.toLowerCase() === 'chatgpt' ||
       command.toLowerCase() === 'chatbot'
     ) {
-      return chatai(message, openai, prompt);
+      return await chatai(message, openai, prompt);
     }
 
     if (
       command.toLowerCase() === 'aiimage' ||
       command.toLowerCase() === 'imageai'
     ) {
-      return aiimage(message, openai, prompt);
+      return await aiimage(message, openai, prompt);
     }
 
     if (
@@ -58,7 +58,7 @@ client.on('messageCreate', async (message) => {
       command.toLowerCase() === 'aiimagevar' ||
       command.toLowerCase() === 'aireviseimage'
     ) {
-      return aiimagevariation(message, openai);
+      return await aiimagevariation(message, openai);
     }
   } catch (error) {
     console.log(error.response.data.error.message);
