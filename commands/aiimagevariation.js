@@ -15,7 +15,7 @@ module.exports = async (message, openai) => {
   })
     .then(function (response) {
       const fileName = `${toBeConverted.id + Date.now()}`;
-      response.data.pipe(fs.createWriteStream(`./files/${fileName}.png`));
+      response.data.pipe(fs.createWriteStream(`../files/${fileName}.png`));
       return response.data.on('end', async () => {
         const originalImage = `../files/${fileName}.png`;
 
@@ -27,7 +27,7 @@ module.exports = async (message, openai) => {
           .toFile(`../files/${fileName}-resized.png`);
 
         const buffer = await fsPromise.readFile(
-          `files/${fileName}-resized.png`
+          `../files/${fileName}-resized.png`
         );
 
         buffer.name = toBeConverted.name || 'image'; // set the name of the buffer to the name of the file
