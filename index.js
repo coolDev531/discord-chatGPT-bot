@@ -107,7 +107,7 @@ client.on('ready', () => {
     { type: 'LISTENING' }
   );
 
-  if (process.env.node_env === 'production') {
+  if (process.env.NODE_ENV === 'production') {
     client.channels.cache
       .get('1059855592795144192')
       .send("Beep boop, I'm online!");
