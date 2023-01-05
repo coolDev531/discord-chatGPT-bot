@@ -6,9 +6,7 @@ const aiimage = require('./commands/aiimage');
 const aiimagevariation = require('./commands/aiimagevariation');
 const chatai = require('./commands/chatai');
 const aiimageedit = require('./commands/aiimageedit');
-const sendMessageToRandomUser = require('./utils/sendMessageToRandomUser');
-const randomImage = require('./utils/randomImage');
-const buildEmbed = require('./utils/buildEmbed');
+const randomimage = require('./commands/randomimage');
 
 const client = new Client({
   intents: [
@@ -83,11 +81,7 @@ client.on('messageCreate', async (message) => {
       return await aiimageedit(message, openai, prompt);
     }
     if (COMMAND_ALIASES['randomimage'].includes(command)) {
-      // return await sendMessageToRandomUser(client, openai);
-      const imageUrl = await randomImage(openai);
-      const embed = buildEmbed(imageUrl);
-
-      return await message.reply({ embeds: [embed] });
+      return await randomimage(message, prompt || '1', openai);
     }
   } catch (error) {
     console.log(error?.response?.data?.error?.message || error);

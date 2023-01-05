@@ -32,6 +32,14 @@ const sentences = [
   'Rock Band',
   'Pop music artist performing live on stage female',
   'Pop music artist performing live on stage male',
+  'oil painting of anything you want',
+  'random oil painting created by AI',
+  'low poly model of random animal',
+  'random car',
+  'random cartoon character',
+  'random tree',
+  'new york city',
+  'music studio recording room',
 ];
 
 module.exports = async (openai) => {
