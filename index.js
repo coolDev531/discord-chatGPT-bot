@@ -6,12 +6,19 @@ const aiimage = require('./commands/aiimage');
 const aiimagevariation = require('./commands/aiimagevariation');
 const chatai = require('./commands/chatai');
 const aiimageedit = require('./commands/aiimageedit');
+const sendMessageToRandomUser = require('./utils/sendMessageToRandomUser');
+const randomImage = require('./utils/randomImage');
+const buildEmbed = require('./utils/buildEmbed');
 
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.DirectMessageTyping,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildPresences,
   ],
 });
 
@@ -38,6 +45,16 @@ const COMMAND_ALIASES = {
     'aireviseimage',
   ],
   aiimageedit: ['imageedit', 'editimage', 'aiimageedit', 'aieditimage'],
+  randomimage: [
+    'randomimage',
+    'random',
+    'randomimg',
+    'randompic',
+    'airandomimage',
+    'airandompic',
+    'airandomimg',
+    'rand',
+  ],
 };
 
 client.on('messageCreate', async (message) => {
@@ -65,6 +82,13 @@ client.on('messageCreate', async (message) => {
     if (COMMAND_ALIASES['aiimageedit'].includes(command)) {
       return await aiimageedit(message, openai, prompt);
     }
+    if (COMMAND_ALIASES['randomimage'].includes(command)) {
+      // return await sendMessageToRandomUser(client, openai);
+      const imageUrl = await randomImage(openai);
+      const embed = buildEmbed(imageUrl);
+
+      return await message.reply({ embeds: [embed] });
+    }
   } catch (error) {
     console.log(error?.response?.data?.error?.message || error);
     return handleError(
@@ -74,6 +98,24 @@ client.on('messageCreate', async (message) => {
   }
 });
 
-client.login(process.env.DISCORD_TOKEN).then(() => {
-  console.log('ready');
+client.login(process.env.DISCORD_TOKEN);
+
+client.on('ready', () => {
+  console.log("Beep boop, I'm online!");
+
+  // Listening to xxx users
+  client.user.setActivity(
+    `${client.guilds.cache
+      .map((guild) => {
+        return guild.memberCount;
+      })
+      .reduce((acc, cv) => acc + cv)} users`,
+    { type: 'LISTENING' }
+  );
+
+  if (process.env.node_env === 'production') {
+    client.channels.cache
+      .get('1059855592795144192')
+      .send("Beep boop, I'm online!");
+  }
 });
