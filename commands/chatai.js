@@ -1,4 +1,8 @@
+const createS3 = require('../utils/createS3');
+const createTextFile = require('../utils/createTextFile');
 const { handleError } = require('../utils/errorHandler');
+
+const s3 = createS3();
 
 module.exports = async (message, openai, prompt) => {
   try {
@@ -11,17 +15,37 @@ module.exports = async (message, openai, prompt) => {
       // stop: ['ChatGPT:', `${message.author.username}:`],
     });
 
-    try {
-      await message.reply(completion.data.choices[0].text); // MUST USE AWAIT HERE
-    } catch (error) {
-      console.log({ error });
-      return handleError(message, error?.rawError?.message || 'ERROR');
+    const text = completion.data.choices[0].text;
+
+    // if longer than 2000 characters make txt file and upload to s3
+    if (text.length > 2000) {
+      const { data, key } = await createTextFile(s3, message, text);
+
+      let chunks = text.match(/.{1,2000}/g); // chunks of 2000 each
+      for await (const chunk of chunks) {
+        await message.channel.send(chunk);
+      }
+
+      await message.reply({
+        files: [{ attachment: data.Location, name: `${prompt}.txt` }],
+      });
+
+      await s3
+        .deleteObject({
+          Bucket: process.env.S3_BUCKET_NAME,
+          Key: key,
+        })
+        .promise();
+
+      return;
     }
+
+    return await message.reply(text); // MUST USE AWAIT HERE
   } catch (error) {
-    console.log(error?.response?.data?.error?.message);
-    return handleError(
-      message,
-      error?.response?.data?.error?.message || 'ERROR'
-    );
+    console.log({ error });
+    const error1 = error?.response?.data?.error?.message;
+    const error2 = error?.rawError?.message;
+
+    return handleError(message, (error1 || error2) ?? 'ERROR');
   }
 };
