@@ -1,11 +1,26 @@
 const createS3 = require('../utils/createS3');
 const createTextFile = require('../utils/createTextFile');
 const { handleError } = require('../utils/errorHandler');
-
 const s3 = createS3();
+const axios = require('axios');
 
 module.exports = async (message, openai, prompt) => {
   try {
+    const txtFile = [...message.attachments.values()][0];
+
+    // if attaching a text file, concat that to the prompt
+    if (txtFile) {
+      const response = await axios({
+        method: 'get',
+        url: txtFile.url,
+        responseType: 'plain/text',
+      });
+
+      prompt += ` ${response.data}`;
+    }
+
+    console.log({ prompt });
+
     const completion = await openai.createCompletion({
       model: 'text-davinci-003',
       // prompt: args.join(' '),

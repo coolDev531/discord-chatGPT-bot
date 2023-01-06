@@ -60,8 +60,8 @@ client.on('messageCreate', async (message) => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.slice(prefix.length).split(/ +/);
-    const prompt = message.content.slice(prefix.length).replace(args[0], '');
     const command = args.shift().toLowerCase();
+    let prompt = message.content.slice(prefix.length + command.length + 1);
 
     console.log(`${Date.now()}: ${message.author.username}: ${prompt}`);
 
