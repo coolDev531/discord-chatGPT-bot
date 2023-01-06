@@ -3,6 +3,7 @@ const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const { Configuration, OpenAIApi } = require('openai');
 const { handleError } = require('./utils/errorHandler');
 const fs = require('fs');
+const { COMMAND_ALIASES } = require('./utils/constants');
 
 const client = new Client({
   intents: [
@@ -35,31 +36,6 @@ const configuration = new Configuration({
 });
 
 const openai = new OpenAIApi(configuration);
-
-const COMMAND_ALIASES = {
-  chatai: ['chatai', 'chat', 'chatgpt', 'chatbot', 'aichat'],
-  aiimage: ['aiimage', 'imageai', 'image', 'makeimage'],
-  aiimagevariation: [
-    'aiimagevariation',
-    'aiimagevar',
-    'imagevariation',
-    'imagevar',
-    'reviseimage',
-    'aireviseimage',
-  ],
-  aiimageedit: ['imageedit', 'editimage', 'aiimageedit', 'aieditimage'],
-  randomimage: [
-    'randomimage',
-    'random',
-    'randomimg',
-    'randompic',
-    'airandomimage',
-    'airandompic',
-    'airandomimg',
-    'rand',
-  ],
-  codeai: ['codeai', 'code', 'codegpt', 'codebot', 'aicode'],
-};
 
 client.on('messageCreate', async (message) => {
   try {
