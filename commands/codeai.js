@@ -36,7 +36,7 @@ module.exports = async (message, openai, prompt) => {
 
     const completion = await openai.createCompletion({
       model: 'text-davinci-003',
-      prompt: `${prompt} ${response?.data}`,
+      prompt: `${prompt}:\n ${response?.data}`,
       temperature: 1,
       max_tokens: 2049,
     });
