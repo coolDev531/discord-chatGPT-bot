@@ -68,7 +68,7 @@ const execute = async (message, openai, prompt) => {
 };
 
 module.exports = {
-  name: 'chatai',
-  description: "Generate a chat using OpenAI's API",
+  name: 'codeai',
+  description: "Generate a text file using OpenAI's API",
   execute,
 };
