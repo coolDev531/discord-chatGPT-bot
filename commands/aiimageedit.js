@@ -15,7 +15,9 @@ module.exports = async (message, openai, prompt) => {
       );
     }
 
-    const initialMsg = message.reply('one moment, updating your image...');
+    const initialMsg = await message.reply(
+      'one moment, updating your image...'
+    );
     const toBeConverted1 = [...message.attachments.values()][0];
     const toBeConverted2 = [...message.attachments.values()][1];
 

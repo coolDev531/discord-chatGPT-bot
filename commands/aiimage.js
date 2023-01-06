@@ -3,7 +3,7 @@ const { handleError } = require('../utils/errorHandler');
 
 module.exports = async (message, openai, prompt) => {
   try {
-    const initialMsg = message.reply('one moment, crafting an image...');
+    const initialMsg = await message.reply('one moment, crafting an image...');
 
     const imageResp = await openai.createImage({
       prompt,

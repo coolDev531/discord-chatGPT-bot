@@ -10,7 +10,7 @@ module.exports = async (message, openai) => {
   try {
     const toBeConverted = [...message.attachments.values()][0];
 
-    const initialMsg = message.reply('one moment, crafting an image...');
+    const initialMsg = await message.reply('one moment, crafting an image...');
 
     const resizedImageBuffer = await createAndResizeImage(
       message,

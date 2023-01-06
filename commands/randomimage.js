@@ -6,7 +6,9 @@ module.exports = async (message, prompt = '1', openai) => {
 
   const restOfText = num > 1 ? `${num} random images` : 'a random image';
 
-  const initialMsg = message.reply(`One moment,I'm crafting ${restOfText}...`);
+  const initialMsg = await message.reply(
+    `One moment,I'm crafting ${restOfText}...`
+  );
 
   if (!!num && num > 1) {
     const embeds = [];
