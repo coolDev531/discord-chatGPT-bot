@@ -7,6 +7,7 @@ const aiimagevariation = require('./commands/aiimagevariation');
 const chatai = require('./commands/chatai');
 const aiimageedit = require('./commands/aiimageedit');
 const randomimage = require('./commands/randomimage');
+const codeai = require('./commands/codeai');
 
 const client = new Client({
   intents: [
@@ -53,6 +54,7 @@ const COMMAND_ALIASES = {
     'airandomimg',
     'rand',
   ],
+  codeai: ['codeai', 'code', 'codegpt', 'codebot', 'aicode'],
 };
 
 client.on('messageCreate', async (message) => {
@@ -82,6 +84,10 @@ client.on('messageCreate', async (message) => {
     }
     if (COMMAND_ALIASES['randomimage'].includes(command)) {
       return await randomimage(message, prompt || '1', openai);
+    }
+
+    if (COMMAND_ALIASES['codeai'].includes(command)) {
+      return await codeai(message, openai, prompt);
     }
   } catch (error) {
     console.log(error?.response?.data?.error?.message || error);

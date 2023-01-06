@@ -17,7 +17,6 @@ module.exports = async (message, openai, prompt) => {
       });
 
       prompt += ` ${response.data}`;
-      console.log({ prompt });
     }
 
     const completion = await openai.createCompletion({
@@ -33,12 +32,12 @@ module.exports = async (message, openai, prompt) => {
 
     // if longer than 2000 characters make txt file and upload to s3
     if (text.length > 2000 || txtFile) {
-      const { data, key } = await createTextFile(s3, message, text);
-
       let chunks = text.match(/.{1,2000}/g); // chunks of 2000 each
       for await (const chunk of chunks) {
         await message.channel.send(chunk);
       }
+
+      const { data, key } = await createTextFile(s3, message, text);
 
       await message.reply({
         files: [{ attachment: data.Location, name: `${prompt}.txt` }],
