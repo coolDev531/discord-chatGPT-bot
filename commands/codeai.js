@@ -45,8 +45,10 @@ const execute = async (message, openai, prompt) => {
 
     const { data, key } = await createTextFile(s3, message, text);
 
+    const txtFileName = prompt.substr(0, 100);
+
     message.reply({
-      files: [{ attachment: data.Location, name: `result.txt` }],
+      files: [{ attachment: data.Location, name: `${txtFileName}.txt` }],
     });
 
     await s3
