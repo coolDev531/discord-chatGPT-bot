@@ -17,9 +17,8 @@ module.exports = async (message, openai, prompt) => {
       });
 
       prompt += ` ${response.data}`;
+      console.log({ prompt });
     }
-
-    console.log({ prompt });
 
     const completion = await openai.createCompletion({
       model: 'text-davinci-003',
