@@ -36,6 +36,7 @@ module.exports = async (message, openai, prompt) => {
     if (text.length > 2000 || txtFile) {
       let chunks = text.match(/.{1,2000}/g); // chunks of 2000 each
       for await (const chunk of chunks) {
+        if (!chunk) continue;
         await message.channel.send(chunk);
       }
 
