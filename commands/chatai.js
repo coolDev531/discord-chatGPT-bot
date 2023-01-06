@@ -33,7 +33,7 @@ module.exports = async (message, openai, prompt) => {
     const text = completion.data.choices[0].text;
 
     // if longer than 2000 characters make txt file and upload to s3
-    if (text.length > 2000) {
+    if (text.length > 2000 || txtFile) {
       const { data, key } = await createTextFile(s3, message, text);
 
       let chunks = text.match(/.{1,2000}/g); // chunks of 2000 each
