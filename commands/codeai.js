@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const s3 = createS3();
 
-module.exports = async (message, openai, prompt) => {
+const execute = async (message, openai, prompt) => {
   const thinkingMsg = await message.reply("One moment, I'm thinking...");
 
   try {
@@ -65,4 +65,10 @@ module.exports = async (message, openai, prompt) => {
 
     return handleError(message, error1 || error2 || JSON.stringify(error));
   }
+};
+
+module.exports = {
+  name: 'chatai',
+  description: "Generate a chat using OpenAI's API",
+  execute,
 };

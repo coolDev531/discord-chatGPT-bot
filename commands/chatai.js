@@ -4,7 +4,7 @@ const { handleError } = require('../utils/errorHandler');
 const s3 = createS3();
 const axios = require('axios');
 
-module.exports = async (message, openai, prompt) => {
+const execute = async (message, openai, prompt) => {
   const thinkingMessage = await message.reply("One moment, I'm thinking...");
 
   try {
@@ -66,4 +66,10 @@ module.exports = async (message, openai, prompt) => {
 
     return handleError(message, (error1 || error2) ?? 'ERROR');
   }
+};
+
+module.exports = {
+  name: 'chatai',
+  description: "Generate a response using OpenAI's API",
+  execute,
 };

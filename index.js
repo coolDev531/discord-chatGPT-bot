@@ -2,12 +2,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const { Configuration, OpenAIApi } = require('openai');
 const { handleError } = require('./utils/errorHandler');
-const aiimage = require('./commands/aiimage');
-const aiimagevariation = require('./commands/aiimagevariation');
-const chatai = require('./commands/chatai');
-const aiimageedit = require('./commands/aiimageedit');
-const randomimage = require('./commands/randomimage');
-const codeai = require('./commands/codeai');
+const fs = require('fs');
 
 const client = new Client({
   intents: [
@@ -24,6 +19,15 @@ const client = new Client({
 const prefix = '!';
 
 client.commands = new Collection();
+
+const commandFiles = fs
+  .readdirSync('./commands')
+  .filter((file) => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+  const command = require(`./commands/${file}`);
+  client.commands.set(command.name, command);
+}
 
 const configuration = new Configuration({
   organization: process.env.OPENAI_ORG,
@@ -68,26 +72,38 @@ client.on('messageCreate', async (message) => {
     console.log(`${Date.now()}: ${message.author.username}: ${prompt}`);
 
     if (COMMAND_ALIASES['chatai'].includes(command)) {
-      return await chatai(message, openai, prompt);
+      return await client.commands
+        .get('chatai')
+        .execute(message, openai, prompt);
     }
 
     if (COMMAND_ALIASES['aiimage'].includes(command)) {
-      return await aiimage(message, openai, prompt);
+      return await client.commands
+        .get('aiimage')
+        .execute(message, openai, prompt);
     }
 
     if (COMMAND_ALIASES['aiimagevariation'].includes(command)) {
-      return await aiimagevariation(message, openai);
+      return await client.commands
+        .get('aiimagevariation')
+        .execute(message, openai);
     }
 
     if (COMMAND_ALIASES['aiimageedit'].includes(command)) {
-      return await aiimageedit(message, openai, prompt);
+      return await client.commands
+        .get('aiimageedit')
+        .execute(message, openai, prompt);
     }
     if (COMMAND_ALIASES['randomimage'].includes(command)) {
-      return await randomimage(message, prompt || '1', openai);
+      return await client.commands
+        .get('aiimageedit')
+        .execute(message, prompt || '1', openai);
     }
 
     if (COMMAND_ALIASES['codeai'].includes(command)) {
-      return await codeai(message, openai, prompt);
+      return await client.commands
+        .get('codeai')
+        .execute(message, openai, prompt);
     }
   } catch (error) {
     console.log(error?.response?.data?.error?.message || error);

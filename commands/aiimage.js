@@ -1,7 +1,7 @@
 const buildEmbed = require('../utils/buildEmbed');
 const { handleError } = require('../utils/errorHandler');
 
-module.exports = async (message, openai, prompt) => {
+const execute = async (message, openai, prompt) => {
   try {
     const initialMsg = await message.reply('one moment, crafting an image...');
 
@@ -18,4 +18,10 @@ module.exports = async (message, openai, prompt) => {
     console.log(error.response.data.error.message);
     return handleError(message, error.response.data.error.message);
   }
+};
+
+module.exports = {
+  name: 'aiimage',
+  description: "Generate an image using OpenAI's API",
+  execute,
 };

@@ -1,7 +1,7 @@
 const buildEmbed = require('../utils/buildEmbed');
 const randomImage = require('../utils/randomImage');
 
-module.exports = async (message, prompt = '1', openai) => {
+const execute = async (message, prompt = '1', openai) => {
   let num = Number(prompt.trim().match(/\d+/)[0]);
 
   const restOfText = num > 1 ? `${num} random images` : 'a random image';
@@ -28,4 +28,10 @@ module.exports = async (message, prompt = '1', openai) => {
 
   initialMsg.delete();
   return await message.reply({ embeds: [embed] });
+};
+
+module.exports = {
+  name: 'randomimage',
+  description: "Generate a random image using OpenAI's API",
+  execute,
 };

@@ -6,7 +6,7 @@ const createAndResizeImage = require('../utils/createAndResizeImage');
 
 const s3 = createS3();
 
-module.exports = async (message, openai) => {
+const execute = async (message, openai) => {
   try {
     const toBeConverted = [...message.attachments.values()][0];
 
@@ -36,4 +36,10 @@ module.exports = async (message, openai) => {
       error?.response?.data?.error?.message || JSON.stringify(error)
     );
   }
+};
+
+module.exports = {
+  name: 'aiimagevariation',
+  description: "Generate an image variation using OpenAI's API",
+  execute,
 };

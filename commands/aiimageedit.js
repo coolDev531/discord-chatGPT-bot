@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const s3 = createS3();
 
-module.exports = async (message, openai, prompt) => {
+const execute = async (message, openai, prompt) => {
   try {
     if ([...message.attachments.values()].length < 2) {
       return handleError(
@@ -44,4 +44,10 @@ module.exports = async (message, openai, prompt) => {
       error?.response?.data?.error?.message || JSON.stringify(error)
     );
   }
+};
+
+module.exports = {
+  name: 'aiimageedit',
+  description: "Edit an image using OpenAI's API",
+  execute,
 };
