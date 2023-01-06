@@ -6,7 +6,7 @@ module.exports = async (message, prompt = '1', openai) => {
 
   const restOfText = num > 1 ? `${num} random images` : 'a random image';
 
-  message.reply(`One moment,I'm crafting ${restOfText}...`);
+  const initialMsg = message.reply(`One moment,I'm crafting ${restOfText}...`);
 
   if (!!num && num > 1) {
     const embeds = [];
@@ -17,11 +17,13 @@ module.exports = async (message, prompt = '1', openai) => {
       num--;
     }
 
+    initialMsg.delete();
     return await message.reply({ embeds });
   }
 
   const imageUrl = await randomImage(openai);
   const embed = buildEmbed(imageUrl);
 
+  initialMsg.delete();
   return await message.reply({ embeds: [embed] });
 };

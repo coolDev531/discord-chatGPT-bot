@@ -7,7 +7,7 @@ require('dotenv').config();
 const s3 = createS3();
 
 module.exports = async (message, openai, prompt) => {
-  message.reply("One moment, I'm thinking...");
+  const thinkingMsg = message.reply("One moment, I'm thinking...");
 
   try {
     const txtFile = [...message.attachments.values()][0];
@@ -55,6 +55,8 @@ module.exports = async (message, openai, prompt) => {
         Key: key,
       })
       .promise();
+
+    thinkingMsg.delete();
 
     return;
   } catch (error) {

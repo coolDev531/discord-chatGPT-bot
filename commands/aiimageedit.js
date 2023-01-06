@@ -15,7 +15,7 @@ module.exports = async (message, openai, prompt) => {
       );
     }
 
-    message.reply('one moment, updating your image...');
+    const initialMsg = message.reply('one moment, updating your image...');
     const toBeConverted1 = [...message.attachments.values()][0];
     const toBeConverted2 = [...message.attachments.values()][1];
 
@@ -33,6 +33,8 @@ module.exports = async (message, openai, prompt) => {
     const imageUrl = imageResp.data.data[0].url;
     const embed = buildEmbed(imageUrl);
     await message.reply({ embeds: [embed] });
+    initialMsg.delete();
+    return;
   } catch (error) {
     console.log(error?.response?.data?.error?.message || error);
     return handleError(

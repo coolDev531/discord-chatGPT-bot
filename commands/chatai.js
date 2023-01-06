@@ -5,7 +5,7 @@ const s3 = createS3();
 const axios = require('axios');
 
 module.exports = async (message, openai, prompt) => {
-  message.reply("One moment, I'm thinking...");
+  const thinkingMessage = message.reply("One moment, I'm thinking...");
 
   try {
     const txtFile = [...message.attachments.values()][0];
@@ -52,8 +52,10 @@ module.exports = async (message, openai, prompt) => {
         })
         .promise();
 
+      thinkingMessage.delete();
       return;
     }
+    thinkingMessage.delete();
 
     return await message.reply(text); // MUST USE AWAIT HERE
   } catch (error) {

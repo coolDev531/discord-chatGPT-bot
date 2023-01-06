@@ -10,7 +10,7 @@ module.exports = async (message, openai) => {
   try {
     const toBeConverted = [...message.attachments.values()][0];
 
-    message.reply('one moment, crafting an image...');
+    const initialMsg = message.reply('one moment, crafting an image...');
 
     const resizedImageBuffer = await createAndResizeImage(
       message,
@@ -27,7 +27,7 @@ module.exports = async (message, openai) => {
     const imageUrl = imageResp.data.data[0].url;
     const embed = buildEmbed(imageUrl);
     message.reply({ embeds: [embed] });
-
+    initialMsg.delete();
     return;
   } catch (error) {
     console.log(error?.response?.data?.error?.message || error);

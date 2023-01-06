@@ -3,7 +3,7 @@ const { handleError } = require('../utils/errorHandler');
 
 module.exports = async (message, openai, prompt) => {
   try {
-    message.reply('one moment, crafting an image...');
+    const initialMsg = message.reply('one moment, crafting an image...');
 
     const imageResp = await openai.createImage({
       prompt,
@@ -12,6 +12,7 @@ module.exports = async (message, openai, prompt) => {
     });
     const imageUrl = imageResp.data.data[0].url;
     const embed = buildEmbed(imageUrl);
+    initialMsg.delete();
     return message.reply({ embeds: [embed] });
   } catch (error) {
     console.log(error.response.data.error.message);
