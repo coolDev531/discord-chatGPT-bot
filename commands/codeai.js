@@ -45,13 +45,9 @@ module.exports = async (message, openai, prompt) => {
 
     const { data, key } = await createTextFile(s3, message, text);
 
-    if (text.length > 2000) {
-      message.reply({
-        files: [{ attachment: data.Location, name: `result.txt` }],
-      });
-    } else {
-      message.reply(text);
-    }
+    message.reply({
+      files: [{ attachment: data.Location, name: `result.txt` }],
+    });
 
     await s3
       .deleteObject({
