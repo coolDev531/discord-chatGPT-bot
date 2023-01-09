@@ -21,6 +21,7 @@ const COMMAND_ALIASES = {
     'rand',
   ],
   codeai: ['codeai', 'code', 'codegpt', 'codebot', 'aicode'],
+  commands: ['help', 'h', 'commands', 'cmds'],
 };
 
 module.exports = {

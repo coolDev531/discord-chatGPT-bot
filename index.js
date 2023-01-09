@@ -17,7 +17,7 @@ const client = new Client({
   ],
 });
 
-const prefix = '!';
+const prefix = process.env.PREFIX || '!';
 
 client.commands = new Collection();
 
@@ -47,6 +47,10 @@ client.on('messageCreate', async (message) => {
 
     console.log(`${Date.now()}: ${message.author.username}: ${prompt}`);
 
+    if (COMMAND_ALIASES['commands'].includes(command)) {
+      return client.commands.get('commands').execute(message, client, prefix);
+    }
+
     if (COMMAND_ALIASES['chatai'].includes(command)) {
       return await client.commands
         .get('chatai')
@@ -72,7 +76,7 @@ client.on('messageCreate', async (message) => {
     }
     if (COMMAND_ALIASES['randomimage'].includes(command)) {
       return await client.commands
-        .get('aiimageedit')
+        .get('randomimage')
         .execute(message, prompt || '1', openai);
     }
 
