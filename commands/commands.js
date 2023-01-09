@@ -1,9 +1,12 @@
 const execute = (message, client, prefix) => {
-  return [...client.commands.values()].forEach((command) => {
-    message.channel.send(
-      `Command: ${prefix}${command.name} - ${command.description}`
-    );
+  let result = '';
+
+  [...client.commands.values()].forEach((command) => {
+    const str = `- ${prefix}${command.name} - ${command.description}`;
+    result += `${str} \n`;
   });
+
+  return message.reply(result);
 };
 
 module.exports = {
