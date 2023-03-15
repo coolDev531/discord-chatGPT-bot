@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const COMMAND_ALIASES = {
   chatai: ['chatai', 'chat', 'chatgpt', 'chatbot', 'aichat'],
   aiimage: ['aiimage', 'imageai', 'image', 'makeimage'],
@@ -24,7 +26,7 @@ const COMMAND_ALIASES = {
   commands: ['help', 'h', 'commands', 'cmds'],
 };
 
-const OPENAI_MODEL = 'gpt-3.5-turbo';
+const OPENAI_MODEL = process.env.OPENAI_MODEL || 'text-davinci-003';
 
 module.exports = {
   OPENAI_MODEL,
