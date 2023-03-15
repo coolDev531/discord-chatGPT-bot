@@ -1,6 +1,7 @@
 const createS3 = require('../utils/createS3');
 const createTextFile = require('../utils/createTextFile');
 const { handleError } = require('../utils/errorHandler');
+const { OPENAI_MODEL } = require('../utils/constants'); 
 const s3 = createS3();
 const axios = require('axios');
 
@@ -22,7 +23,7 @@ const execute = async (message, openai, prompt) => {
     }
 
     const completion = await openai.createCompletion({
-      model: 'text-davinci-003',
+      model: OPENAI_MODEL,
       // prompt: args.join(' '),
       prompt: prompt,
       temperature: 1,
