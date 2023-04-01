@@ -1,7 +1,7 @@
 const createS3 = require('../utils/createS3');
 const createTextFile = require('../utils/createTextFile');
 const { handleError } = require('../utils/errorHandler');
-const { OPENAI_MODEL } = require('../utils/constants'); 
+const { OPENAI_MODEL } = require('../utils/constants');
 const s3 = createS3();
 const axios = require('axios');
 
@@ -35,26 +35,7 @@ const execute = async (message, openai, prompt) => {
 
     // if longer than 2000 characters make txt file and upload to s3
     if (text.length > 2000 || txtFile) {
-      let chunks = text.match(/.{1,2000}/g); // chunks of 2000 each
-      for await (const chunk of chunks) {
-        if (!chunk) continue;
-        await message.channel.send(chunk);
-      }
-
-      const { data, key } = await createTextFile(s3, message, text);
-
-      await message.reply({
-        files: [{ attachment: data.Location, name: `${prompt}.txt` }],
-      });
-
-      await s3
-        .deleteObject({
-          Bucket: process.env.S3_BUCKET_NAME,
-          Key: key,
-        })
-        .promise();
-
-      thinkingMessage.delete();
+      splitAndSend(text, message, prompt);
       return;
     }
     thinkingMessage.delete();
@@ -67,6 +48,29 @@ const execute = async (message, openai, prompt) => {
 
     return handleError(message, (error1 || error2) ?? 'ERROR');
   }
+};
+
+const splitAndSend = async (text, message, prompt) => {
+  let chunks = text.match(/.{1,2000}/g); // chunks of 2000 each
+  for await (const chunk of chunks) {
+    if (!chunk) continue;
+    await message.channel.send(chunk);
+  }
+
+  const { data, key } = await createTextFile(s3, message, text);
+
+  await message.reply({
+    files: [{ attachment: data.Location, name: `${prompt}.txt` }],
+  });
+
+  await s3
+    .deleteObject({
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: key,
+    })
+    .promise();
+
+  thinkingMessage.delete();
 };
 
 module.exports = {
