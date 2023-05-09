@@ -17,7 +17,7 @@ const client = new Client({
   ],
 });
 
-const prefix = process.env.PREFIX || '!';
+const prefix = process.env.PREFIX || 'ai!';
 
 client.commands = new Collection();
 
