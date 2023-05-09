@@ -82,7 +82,7 @@ const execute = async (message, openai, prompt) => {
 };
 
 module.exports = {
-  name: 'codeai',
+  name: 'code',
   description: "Generate a text file using OpenAI's API",
   execute,
 };

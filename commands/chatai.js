@@ -88,7 +88,7 @@ const splitAndSend = async (text, message, prompt) => {
 };
 
 module.exports = {
-  name: 'chatai',
+  name: 'chat',
   description: "Generate a response using OpenAI's API",
   execute,
 };

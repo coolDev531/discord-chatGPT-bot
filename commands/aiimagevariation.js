@@ -39,7 +39,7 @@ const execute = async (message, openai) => {
 };
 
 module.exports = {
-  name: 'aiimagevariation',
+  name: 'image-variation',
   description: "Generate an image variation using OpenAI's API",
   execute,
 };

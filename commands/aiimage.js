@@ -21,7 +21,7 @@ const execute = async (message, openai, prompt) => {
 };
 
 module.exports = {
-  name: 'aiimage',
+  name: 'image',
   description: "Generate an image using OpenAI's API",
   execute,
 };

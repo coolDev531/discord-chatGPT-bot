@@ -31,7 +31,7 @@ const execute = async (message, prompt = '1', openai) => {
 };
 
 module.exports = {
-  name: 'randomimage',
+  name: 'random-image',
   description: "Generate a random image using OpenAI's API",
   execute,
 };

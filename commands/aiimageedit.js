@@ -47,7 +47,7 @@ const execute = async (message, openai, prompt) => {
 };
 
 module.exports = {
-  name: 'aiimageedit',
+  name: 'image-edit',
   description: "Edit an image using OpenAI's API",
   execute,
 };
