@@ -55,39 +55,35 @@ client.on('messageCreate', async (message) => {
       return client.commands.get('commands').execute(message, client, prefix);
     }
 
-    if (COMMAND_ALIASES['chatai'].includes(command)) {
+    if (COMMAND_ALIASES['chat'].includes(command)) {
+      return await client.commands.get('chat').execute(message, openai, prompt);
+    }
+
+    if (COMMAND_ALIASES['image'].includes(command)) {
       return await client.commands
-        .get('chatai')
+        .get('image')
         .execute(message, openai, prompt);
     }
 
-    if (COMMAND_ALIASES['aiimage'].includes(command)) {
+    if (COMMAND_ALIASES['image-variation'].includes(command)) {
       return await client.commands
-        .get('aiimage')
-        .execute(message, openai, prompt);
-    }
-
-    if (COMMAND_ALIASES['aiimagevariation'].includes(command)) {
-      return await client.commands
-        .get('aiimagevariation')
+        .get('image-variation')
         .execute(message, openai);
     }
 
-    if (COMMAND_ALIASES['aiimageedit'].includes(command)) {
+    if (COMMAND_ALIASES['image-edit'].includes(command)) {
       return await client.commands
-        .get('aiimageedit')
+        .get('image-edit')
         .execute(message, openai, prompt);
     }
-    if (COMMAND_ALIASES['randomimage'].includes(command)) {
+    if (COMMAND_ALIASES['random-image'].includes(command)) {
       return await client.commands
-        .get('randomimage')
+        .get('random-image')
         .execute(message, prompt || '1', openai);
     }
 
-    if (COMMAND_ALIASES['codeai'].includes(command)) {
-      return await client.commands
-        .get('codeai')
-        .execute(message, openai, prompt);
+    if (COMMAND_ALIASES['code'].includes(command)) {
+      return await client.commands.get('code').execute(message, openai, prompt);
     }
   } catch (error) {
     console.log(error?.response?.data?.error?.message || error);

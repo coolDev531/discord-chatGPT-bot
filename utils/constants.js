@@ -1,9 +1,9 @@
 require('dotenv').config();
 
 const COMMAND_ALIASES = {
-  chatai: ['chatai', 'chat', 'chatgpt', 'chatbot', 'aichat'],
-  aiimage: ['aiimage', 'imageai', 'image', 'make-image'],
-  aiimagevariation: [
+  chat: ['chatai', 'chat', 'chatgpt', 'chatbot', 'aichat'],
+  image: ['aiimage', 'imageai', 'image', 'make-image'],
+  'image-variation': [
     'aiimagevariation',
     'aiimagevar',
     'imagevariation',
@@ -13,14 +13,14 @@ const COMMAND_ALIASES = {
     'reviseimage',
     'aireviseimage',
   ],
-  aiimageedit: [
+  'image-edit': [
     'image-edit',
     'imageedit',
     'editimage',
     'aiimageedit',
     'aieditimage',
   ],
-  randomimage: [
+  'random-image': [
     'random-image',
     'randomimage',
     'random',
@@ -31,7 +31,7 @@ const COMMAND_ALIASES = {
     'airandomimg',
     'rand',
   ],
-  codeai: ['codeai', 'code', 'codegpt', 'codebot', 'aicode'],
+  code: ['codeai', 'code', 'codegpt', 'codebot', 'aicode'],
   commands: ['help', 'h', 'commands', 'cmds'],
 };
 
