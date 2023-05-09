@@ -22,23 +22,37 @@ const execute = async (message, openai, prompt) => {
       prompt += ` ${response.data}`;
     }
 
-    const completion = await openai.createCompletion({
+    const completion = await openai.createChatCompletion({
       model: OPENAI_MODEL,
-      // prompt: args.join(' '),
-      prompt: prompt,
       temperature: 1,
       max_tokens: 2049,
-      // stop: ['ChatGPT:', `${message.author.username}:`],
+      messages: [
+        {
+          role: 'system',
+          content: global.systemContent,
+        },
+        ...global.messages,
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
     });
 
-    const text = completion.data.choices[0].text;
+    const text = completion.data.choices[0].message.content;
 
     // if longer than 2000 characters make txt file and upload to s3
     if (text.length > 2000 || txtFile) {
       splitAndSend(text, message, prompt);
       return;
     }
+
     thinkingMessage.delete();
+
+    global.messages.push({
+      role: 'user',
+      content: prompt,
+    });
 
     return await message.reply(text); // MUST USE AWAIT HERE
   } catch (error) {

@@ -37,6 +37,10 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
+global.messages = [];
+global.systemContent =
+  'The platform is Discord, you can use markup to format your messages to fit with discord.';
+
 client.on('messageCreate', async (message) => {
   try {
     if (!message.content.startsWith(prefix) || message.author.bot) return;

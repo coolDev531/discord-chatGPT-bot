@@ -35,14 +35,25 @@ const execute = async (message, openai, prompt) => {
       });
     }
 
-    const completion = await openai.createCompletion({
+    const completion = await openai.createChatCompletion({
       model: OPENAI_MODEL,
-      prompt: `${prompt}:\n ${response?.data}`,
       temperature: 1,
       max_tokens: 2049,
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are an AI assistant, you are helping the user with their code.',
+        },
+        ...global.messages,
+        {
+          role: 'user',
+          content: `${prompt}:\n ${response?.data}`,
+        },
+      ],
     });
 
-    const text = completion.data.choices[0].text;
+    const text = completion.data.choices[0].message.content;
 
     const { data, key } = await createTextFile(s3, message, text);
 
