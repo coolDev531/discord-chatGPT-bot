@@ -85,6 +85,12 @@ client.on('messageCreate', async (message) => {
     if (COMMAND_ALIASES['code'].includes(command)) {
       return await client.commands.get('code').execute(message, openai, prompt);
     }
+
+    if (command === 'legacy-chat') {
+      return await client.commands
+        .get('legacy-chat')
+        .execute(message, openai, prompt);
+    }
   } catch (error) {
     console.log(error?.response?.data?.error?.message || error);
     return handleError(
