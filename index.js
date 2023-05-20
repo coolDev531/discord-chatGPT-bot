@@ -1,5 +1,10 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const {
+  Client,
+  GatewayIntentBits,
+  Collection,
+  ActivityType,
+} = require('discord.js');
 const { Configuration, OpenAIApi } = require('openai');
 const { handleError } = require('./utils/errorHandler');
 const fs = require('fs');
@@ -105,19 +110,12 @@ client.login(process.env.DISCORD_TOKEN);
 client.on('ready', () => {
   console.log("Beep boop, I'm online!");
 
-  // Listening to xxx users
-  client.user.setActivity(
-    `${client.guilds.cache
-      .map((guild) => {
-        return guild.memberCount;
-      })
-      .reduce((acc, cv) => acc + cv)} users`,
-    { type: 'LISTENING' }
+  const totalUsers = client.guilds.cache.reduce(
+    (acc, guild) => acc + guild.memberCount,
+    0
   );
 
-  if (process.env.NODE_ENV === 'production') {
-    client.channels.cache
-      .get('1059855592795144192')
-      .send("Beep boop, I'm online!");
-  }
+  client.user.setActivity(`${prefix}help | ${totalUsers} users`, {
+    type: ActivityType.Listening,
+  });
 });
