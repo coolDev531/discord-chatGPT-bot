@@ -43,7 +43,9 @@ const execute = async (message, openai, prompt) => {
 
     // if longer than 2000 characters make txt file and upload to s3
     if (text.length > 2000 || txtFile) {
-      splitAndSend(text, message, prompt);
+      await splitAndSend(text, message, prompt);
+      thinkingMessage.delete();
+
       return;
     }
 
@@ -83,8 +85,6 @@ const splitAndSend = async (text, message, prompt) => {
       Key: key,
     })
     .promise();
-
-  thinkingMessage.delete();
 };
 
 module.exports = {
