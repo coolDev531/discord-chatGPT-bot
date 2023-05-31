@@ -42,7 +42,7 @@ const execute = async (message, openai, prompt) => {
     const text = completion.data.choices[0].message.content;
 
     global.messages.push({
-      role: 'ai',
+      role: 'assistant',
       content: text,
     });
 
