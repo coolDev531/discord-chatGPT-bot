@@ -41,17 +41,17 @@ const execute = async (message, openai, prompt) => {
 
     const text = completion.data.choices[0].message.content;
 
+    global.messages.push({
+      role: 'assistant',
+      content: text,
+    });
+
     // if longer than 2000 characters make txt file and upload to s3
     if (text.length > 2000 || txtFile) {
       await splitAndSend(text, message, prompt);
       thinkingMessage.delete();
 
       return;
-    } else {
-      global.messages.push({
-        role: 'assistant',
-        content: text,
-      });
     }
 
     thinkingMessage.delete();

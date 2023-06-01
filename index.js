@@ -9,6 +9,7 @@ const { Configuration, OpenAIApi } = require('openai');
 const { handleError } = require('./utils/errorHandler');
 const fs = require('fs');
 const { COMMAND_ALIASES } = require('./utils/constants');
+const cron = require('node-cron');
 
 const client = new Client({
   intents: [
@@ -118,4 +119,12 @@ client.on('ready', () => {
   client.user.setActivity(`${prefix}help | ${totalUsers} users`, {
     type: ActivityType.Listening,
   });
+});
+
+const everyFiveMinutesCronSyntax = '*/5 * * * *';
+
+cron.schedule(everyFiveMinutesCronSyntax, async () => {
+  // flush global.messages every 10 minutes to prevent max token errors
+  console.log('Flushing global.messages');
+  global.messages = [];
 });
