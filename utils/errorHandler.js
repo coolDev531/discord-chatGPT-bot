@@ -7,6 +7,8 @@ const { EmbedBuilder } = require('discord.js');
  * @return {MessageEmbed}
  */
 const handleError = async (message, error) => {
+  global.messages = [];
+
   const embed = new EmbedBuilder()
     .setColor(0xff0000)
     .setTitle('Error')
