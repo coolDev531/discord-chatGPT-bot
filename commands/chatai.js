@@ -72,7 +72,20 @@ const execute = async (message, openai, prompt) => {
 };
 
 const splitAndSend = async (text, message, prompt) => {
-  let chunks = text.match(/.{1,2000}/g); // chunks of 2000 each
+  // let chunks = text.match(/.{1,2000}/g); // chunks of 2000 each
+  // for await (const chunk of chunks) {
+  //   if (!chunk) continue;
+  //   await message.channel.send(chunk);
+  // }
+  const MAX_LENGTH = 2000;
+
+  const chunks = [];
+
+  for (let i = 0; i < text.length; i += MAX_LENGTH) {
+    const chunk = text.slice(i, i + MAX_LENGTH);
+    chunks.push(chunk);
+  }
+
   for await (const chunk of chunks) {
     if (!chunk) continue;
     await message.channel.send(chunk);

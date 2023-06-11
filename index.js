@@ -121,9 +121,10 @@ client.on('ready', () => {
   });
 });
 
-const everyFiveMinutesCronSyntax = '*/5 * * * *';
+// const everyFiveMinutesCronSyntax = '*/5 * * * *';
+const everyTenMinutesCronSyntax = '*/10 * * * *';
 
-cron.schedule(everyFiveMinutesCronSyntax, async () => {
+cron.schedule(everyTenMinutesCronSyntax, async () => {
   // flush global.messages every 10 minutes to prevent max token errors
   console.log('Flushing global.messages');
   global.messages = [];
