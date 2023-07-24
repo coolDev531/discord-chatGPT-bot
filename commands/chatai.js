@@ -27,10 +27,10 @@ const execute = async (message, openai, prompt) => {
       temperature: 1,
       max_tokens: 2049,
       messages: [
-        {
-          role: 'system',
-          content: global.systemContent,
-        },
+        // {
+        //   role: 'system',
+        //   content: global.systemContent,
+        // },
         ...global.messages,
         {
           role: 'user',
