@@ -19,11 +19,28 @@ const staircase = (numRows, userId) => {
   return str;
 };
 
+const splitAndSend = async (text, message, prompt) => {
+  const MAX_LENGTH = 2000;
+
+  const chunks = [];
+
+  for (let i = 0; i < text.length; i += MAX_LENGTH) {
+    const chunk = text.slice(i, i + MAX_LENGTH);
+    chunks.push(chunk);
+  }
+
+  for await (const chunk of chunks) {
+    if (!chunk) continue;
+    await message.channel.send(chunk);
+  }
+};
+
 const execute = async (message, args) => {
   try {
     const userId = message.mentions.users.first()?.id;
 
     const numRows = Number(args?.[1]) ?? 6;
+    const MAX_CHARS = 2000;
 
     if (!userId) {
       return await message.reply('Please provide a user to ping');
@@ -42,6 +59,13 @@ const execute = async (message, args) => {
     }
 
     const scase = staircase(+numRows, userId);
+
+    if (scase.length > MAX_CHARS) {
+      await splitAndSend(scase, message);
+
+      return;
+    }
+
     return await message.reply(scase);
   } catch (error) {
     console.log(error);
