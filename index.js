@@ -44,8 +44,8 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 global.messages = [];
-global.systemContent =
-  'The platform is Discord, you can use markup to format your messages to fit with discord.';
+// global.systemContent =
+//   'The platform is Discord, you can use markup to format your messages to fit with discord.';
 
 client.on('messageCreate', async (message) => {
   try {
@@ -96,6 +96,10 @@ client.on('messageCreate', async (message) => {
       return await client.commands
         .get('legacy-chat')
         .execute(message, openai, prompt);
+    }
+
+    if (command === 'staircase') {
+      return await client.commands.get('staircase').execute(message, args);
     }
   } catch (error) {
     console.log(error?.response?.data?.error?.message || error);
