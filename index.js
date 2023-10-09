@@ -99,7 +99,7 @@ client.on('messageCreate', async (message) => {
     }
 
     if (command === 'staircase') {
-      return await client.commands.get('staircase').execute(message, prompt);
+      return await client.commands.get('staircase').execute(message, args);
     }
   } catch (error) {
     console.log(error?.response?.data?.error?.message || error);

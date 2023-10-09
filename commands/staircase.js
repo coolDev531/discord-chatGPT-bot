@@ -1,6 +1,7 @@
 const { handleError } = require('../utils/errorHandler');
 
 const staircase = (numRows, userId) => {
+  let str = '';
   if (!userId) {
     throw new Error('staircase: userId is required');
   }
@@ -11,13 +12,18 @@ const staircase = (numRows, userId) => {
     // print out a " " n-i times and append a # i times
     // console log adds a new line by default
 
-    console.log(' '.repeat(numRows - i) + `<@${userId}>`.repeat(i));
+    const currentRow = ' '.repeat(numRows - i) + `<@${userId}>`.repeat(i);
+    str += currentRow + '\n';
   }
+
+  return str;
 };
 
-const execute = async (message, numRows = 6) => {
+const execute = async (message, args) => {
   try {
     const userId = message.mentions.users.first()?.id;
+
+    const numRows = Number(args?.[1]) ?? 6;
 
     if (!userId) {
       return await message.reply('Please provide a user to ping');
