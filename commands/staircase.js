@@ -15,9 +15,8 @@ const staircase = (numRows, userId) => {
   }
 };
 
-const execute = async (message, args) => {
+const execute = async (message, numRows = 6) => {
   try {
-    const numRows = args?.[0] ?? 6;
     const userId = message.mentions.users.first()?.id;
 
     if (!userId) {
@@ -28,15 +27,15 @@ const execute = async (message, args) => {
       return await message.reply('Please provide a number of rows');
     }
 
-    if (isNaN(numRows)) {
+    if (isNaN(+numRows)) {
       return await message.reply('Please provide a valid number');
     }
 
-    if (numRows > 20) {
+    if (+numRows > 20) {
       return await message.reply('Please provide a number less than 20');
     }
 
-    const scase = staircase(numRows, userId);
+    const scase = staircase(+numRows, userId);
     return await message.reply(scase);
   } catch (error) {
     console.log(error);
